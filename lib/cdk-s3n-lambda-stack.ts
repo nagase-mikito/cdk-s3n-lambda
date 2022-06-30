@@ -1,16 +1,34 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { Stack, StackProps, Duration } from 'aws-cdk-lib';
+import { Bucket, EventType } from 'aws-cdk-lib/aws-s3';
+import { LambdaDestination } from 'aws-cdk-lib/aws-s3-notifications';
+import { Runtime, Function, AssetCode } from 'aws-cdk-lib/aws-lambda';
 
 export class CdkS3NLambdaStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    // Lambda Function
+    const target_function = new Function(this, "sumpleFunc", {
+      code: new AssetCode("resources"),
+      handler: "index.handler",
+      runtime: Runtime.NODEJS_16_X,
+      functionName: "sumple_function",
+      timeout: Duration.seconds(60)
+    });
+  
+    // 既存のS3バケットを取得
+    const existing_bucket = Bucket.fromBucketArn(
+      this,
+      'sumple-bucket-20220630-becominn',
+      'arn:aws:s3:::sumple-bucket-20220630-becominn'
+    )
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'CdkS3NLambdaQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    // S3Notificationを設定
+    existing_bucket.addEventNotification(
+      EventType.OBJECT_CREATED_POST,
+      new LambdaDestination(target_function)
+    )
+  
   }
 }
