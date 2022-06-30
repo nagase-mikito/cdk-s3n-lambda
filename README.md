@@ -1,6 +1,4 @@
-# Welcome to your CDK TypeScript project
-
-This is a blank project for CDK development with TypeScript.
+This project for https://dev.classmethod.jp/etc/cdk-s3notification-kick-lambda/
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
