@@ -26,7 +26,7 @@ export class CdkS3NLambdaStack extends Stack {
 
     // S3Notificationを設定
     existing_bucket.addEventNotification(
-      EventType.OBJECT_CREATED_POST,
+      EventType.OBJECT_CREATED_PUT,
       new LambdaDestination(target_function)
     )
   
